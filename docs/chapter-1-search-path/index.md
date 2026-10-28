@@ -29,7 +29,7 @@ SPEED_MPS = float(input("Drone speed (m/s): "))
 OUTPUT_FILE = "search_route.gpx"
 ```
 
-These are inputs, not results. When the program starts, it would ask you to type 5 values: start point (latitude and longitude), search width, height, lane spacing, and speed. It'll be helpful if we can command the drones to search on its own in the future if we have an input function like so.
+- These are inputs, not results. When the program starts, it would ask you to type 5 values: start point (latitude and longitude), search width, height, lane spacing, and speed. It'll be helpful if we can command the drones to search on its own in the future if we have an input function like so.
 
 The very last code lets us set the name of the output file.
 
@@ -37,7 +37,7 @@ The very last code lets us set the name of the output file.
 METERS_PER_DEG_LAT = 111_320
 ```
 
-A constant: we need to convert the GPS degree units to math in meters. 111,320 m per degree of latitude. Therefore, we use this conversion. _ is simply used for readability.
+- A constant: we need to convert the GPS degree units to math in meters. 111,320 m per degree of latitude. Therefore, we use this conversion. _ is simply used for readability.
 
 ## Step 2: Building the lanes
 
@@ -57,14 +57,14 @@ def make_lawnmower(width, height, spacing):
 
 ```
 
-The image one of the SAR team leads showed me for the search areas appeared to be a rectangle. Therefore, we also used rectangles to replicate search areas.
-Lanes account for the number of lanes  = field width / lane spacing, rounded up +1. 
-Spacing realistically would be represented how wide a strip of ground the camera sees minus the overlap. +1 accounts for the beginning of the count. Just like how a 30m fence with post every 10m has 4 posts and 3 gaps. The posts would represent the lanes.
+- The image one of the SAR team leads showed me for the search areas appeared to be a rectangle. Therefore, we also used rectangles to replicate search areas.
+- Lanes account for the number of lanes  = field width / lane spacing, rounded up +1. 
+- Spacing realistically would be represented how wide a strip of ground the camera sees minus the overlap. +1 accounts for the beginning of the count. Just like how a 30m fence with post every 10m has 4 posts and 3 gaps. The posts would represent the lanes.
 points = []: the coordinates go in it. It is empty because the function hasn't calculated any waypoints yet, and the loop fills it.
-for i in range(lanes): :Repeats n + 1 times.
-east = min(i * spacing, width): i * spacing represents how far the lane is from the starting edge. By the time it reaches outside the search area, the min(..., width) picks the smaller number so the last lane gets pulled back to the fields edge.
-if i % 2 == 0: :Change drones direction depending on whether it is on a even/odd lane so that the drone doesn't reposition itself facing the same direction every time it clears a lane, it'll be a waste of time having the drone set up its position after every lane.
-Without a flip, the drone will fly all the way across the field to start again = waste of battery and time.
+- for i in range(lanes): :Repeats n + 1 times.
+- east = min(i * spacing, width): i * spacing represents how far the lane is from the starting edge. By the time it reaches outside the search area, the min(..., width) picks the smaller number so the last lane gets pulled back to the fields edge.
+- if i % 2 == 0: :Change drones direction depending on whether it is on a even/odd lane so that the drone doesn't reposition itself facing the same direction every time it clears a lane, it'll be a waste of time having the drone set up its position after every lane.
+- Without a flip, the drone will fly all the way across the field to start again = waste of battery and time.
 return points : hands back full list of planned way points.
 
 
