@@ -1,5 +1,23 @@
 # Glossary
 
+## Chapter 1: Search path
+
+**Lawnmower path** — A flight path of straight lines back and forth across an area, like mowing a lawn. Also called a boustrophedon or parallel-track search.
+
+**Lane** — One straight line of the lawnmower path.
+
+**Waypoint** — A GPS point the drone flies to. A path is a list of waypoints.
+
+**Field of view (FOV)** — The angle the camera can see, in degrees. Wider FOV = bigger photo on the ground.
+
+**Footprint** — The patch of ground one photo covers. Grows with flight height and FOV.
+
+**Sidelap** — How much neighboring lanes' photos overlap side to side, as a percent. Prevents gaps.
+
+**Lane spacing** — The distance between lanes. Footprint width × (1 − sidelap).
+
+## Chapter 2: Person detection
+
 **Bounding box** — A rectangle the model draws around something it thinks it found.
 
 **Confidence score** — A number from 0 to 1 showing how sure the model is about one box. Not a probability of being right.
@@ -29,5 +47,7 @@
 **Overlap** — How much neighboring tiles share, so a person on a tile edge isn't cut in half.
 
 **RGB** — A normal color photo (red, green, blue). Not thermal or night imagery.
+
+## General
 
 **Colab** — Google's free online notebook for running Python code.
