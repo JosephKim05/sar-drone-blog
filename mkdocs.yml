@@ -1,11 +1,12 @@
 site_name: SAR Drone Build Log
 site_description: Honest notes on building an aerial casualty-location proof of concept
 site_author: Joseph Kim
-site_url: https://YOUR-USERNAME.github.io/sar-drone-blog/
-repo_url: https://github.com/YOUR-USERNAME/sar-drone-blog
+site_url: https://josephkim05.github.io/sar-drone-blog/
+repo_url: https://github.com/JosephKim05/sar-drone-blog
 
 theme:
   name: material
+  custom_dir: overrides
   features:
     - navigation.tabs
     - content.code.copy
