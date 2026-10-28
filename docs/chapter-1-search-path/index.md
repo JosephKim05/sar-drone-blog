@@ -75,6 +75,11 @@ def path_length(points):
         total += math.hypot(x2 - x1, y2 - y1)
     return total
 ```
+- Function uses meter waypoints from make_lawnmower i.e. (0,0) & (0,100).
+- Starts at total = 0 because no distance has been counted yet.
+- x2 - x1, y2- y1: is Pythagoras, representing the distance it moved from point 1 to point 2. East and north points. Sqrt(east^2 + north^2)
+- total +=: adding what is already there - like an odometer.
+- Final number represents the drone's planned distance since it hasn't flown yet. The main block divides it by speed to get estimated flight time.
 
 ```python
 def path_length(points):
