@@ -1,0 +1,36 @@
+site_name: SAR Drone Build Log
+site_description: Honest notes on building an aerial casualty-location proof of concept
+site_author: Joseph Kim
+site_url: https://YOUR-USERNAME.github.io/sar-drone-blog/
+repo_url: https://github.com/YOUR-USERNAME/sar-drone-blog
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - content.code.copy
+  palette:
+    - scheme: default
+      toggle: {icon: material/brightness-7, name: Switch to dark mode}
+    - scheme: slate
+      toggle: {icon: material/brightness-4, name: Switch to light mode}
+
+plugins:
+  - search
+  - blog
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Blog:
+      - blog/index.md
+  - Glossary: glossary.md
+  - Limits: limits.md
+  - About: about.md
