@@ -79,7 +79,7 @@ def path_length(points):
 - Starts at total = 0 because no distance has been counted yet.
 - x2 - x1, y2- y1: is Pythagoras, representing the distance it moved from point 1 to point 2. East and north points. Sqrt(east^2 + north^2)
 - total +=: adding what is already there - like an odometer.
-- Final number represents the drone's planned distance since it hasn't flown yet. The main block divides it by speed to get estimated flight time.
+- Final number represents the drone's planned distance since it hasn't flown yet. The main block divided by speed to get estimated flight time.
 
 ```python
 def path_length(points):
@@ -88,6 +88,12 @@ def path_length(points):
         total += math.hypot(x2 - x1, y2 - y1)
     return total
 ```
+
+- This determines the length of the path. We start with 0 as our total.
+- zip(points, points[1:]) : pairs each waypoint with the next one, so each pair is one leg of the flight.
+- The hypotenuse function turns two changes (east and north values) into one straight line distance.
+- The += function acts as an odometer, additional gain. This allows the main block to divide total distance by drone speed.
+- Example: (0,0) -> (0,100)  = 100m, (0,100) -> (30,100) = 30m, so the total distance goes from 0 -> 100 -> 130.
 
 ```python
 def save_gpx(points, filename):
