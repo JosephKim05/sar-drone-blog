@@ -60,10 +60,10 @@ def make_lawnmower(width, height, spacing):
 - The image one of the SAR team leads showed me for the search areas appeared to be a rectangle. Therefore, we also used rectangles to replicate search areas.
 - Lanes account for the number of lanes  = field width / lane spacing, rounded up +1. 
 - Spacing realistically would be represented how wide a strip of ground the camera sees minus the overlap. +1 accounts for the beginning of the count. Just like how a 30m fence with post every 10m has 4 posts and 3 gaps. The posts would represent the lanes.
-points = []: the coordinates go in it. It is empty because the function hasn't calculated any waypoints yet, and the loop fills it.
-- for i in range(lanes): :Repeats n + 1 times.
-- east = min(i * spacing, width): i * spacing represents how far the lane is from the starting edge. By the time it reaches outside the search area, the min(..., width) picks the smaller number so the last lane gets pulled back to the fields edge.
-- if i % 2 == 0: :Change drones direction depending on whether it is on a even/odd lane so that the drone doesn't reposition itself facing the same direction every time it clears a lane, it'll be a waste of time having the drone set up its position after every lane.
+`points = []`: the coordinates go in it. It is empty because the function hasn't calculated any waypoints yet, and the loop fills it.
+- `for i in range(lanes)`: :Repeats n + 1 times.
+- `east = min(i * spacing, width)`: i * spacing represents how far the lane is from the starting edge. By the time it reaches outside the search area, the min(..., width) picks the smaller number so the last lane gets pulled back to the fields edge.
+- `if i % 2 == 0`: :Change drones direction depending on whether it is on a even/odd lane so that the drone doesn't reposition itself facing the same direction every time it clears a lane, it'll be a waste of time having the drone set up its position after every lane.
 - Without a flip, the drone will fly all the way across the field to start again = waste of battery and time.
 return points : hands back full list of planned way points.
 
@@ -90,9 +90,9 @@ def path_length(points):
 ```
 
 - This determines the length of the path. We start with 0 as our total.
-- zip(points, points[1:]) : pairs each waypoint with the next one, so each pair is one leg of the flight.
-- The hypotenuse function turns two changes (east and north values) into one straight line distance.
-- The += function acts as an odometer, additional gain. This allows the main block to divide total distance by drone speed.
+- `zip(points, points[1:])` : pairs each waypoint with the next one, so each pair is one leg of the flight.
+- The `math.hypot` function turns two changes (east and north values) into one straight line distance.
+- The `+=` function acts as an odometer, additional gain. This allows the main block to divide total distance by drone speed.
 - Example: (0,0) --> (0,100)  = 100m, (0,100) --> (30,100) = 30m, so the total distance goes from 0 --> 100 --> 130.
 
 ```python
@@ -109,6 +109,17 @@ def save_gpx(points, filename):
     with open(filename, "w") as f:
         f.write("\n".join(lines))
 ```
+
+- `<rte>` indicates where route section starts in the file and </rte> marks where it ends. <name> gives it name.
+- `<?xml...>` and `<gpx...>` acts as headers that tells apps that it is a start of GPX file.
+- for east, north in points: takes one meter waypoint at a time
+- `to_lat_lon(...)` convert it to GPS latitude and longitude
+- `lines.append(...)1 adds one <rtept> route point line with those numbers
+- `lines += [...]` adds the closing tags `</rte>` and `</gpx>` to end the route and the file.
+- `open(filename, "w")` creates the file. `"w"` means write, and it replaces any old file with the same name.
+- `"\n".join(lines)` puts each line on its own row.
+- We save gpx points so it can be reopened using Google Earth and show the route on a real map or load it.
+- 1 decimal place is 11km so rounding to 6 decimal places helps us narrow down the precision down to 10cm
 
 ```python
 if __name__ == "__main__":
