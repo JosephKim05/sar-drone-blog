@@ -67,6 +67,19 @@ def make_lawnmower(width, height, spacing):
 - Without a flip, the drone will fly all the way across the field to start again = waste of battery and time.
 return points : hands back full list of planned way points.
 
+```python
+def to_lat_lon(east_m, north_m, start_lat, start_lon):
+    lat = start_lat + north_m / METERS_PER_DEG_LAT
+    meters_per_deg_lon = METERS_PER_DEG_LAT * math.cos(math.radians(start_lat))
+    lon = start_lon + east_m / meters_per_deg_lon
+    return lat, lon
+```
+
+- we need this function because our waypoints are in meters, but GPS or a map needs the waypoints converted to lat, lon values
+- 111,320 / 111,320 to get 1 degree north. Then the code adds that to start_lat to get the new latitude.
+- Near the poles, 1 degree of longitude covers fewer meters, so the `meters_per_deg_lon` gets smaller. So even if the same distance of 100m may be covered, it would result in more degrees of longitude. Urbana is around 40 degrees north, so cos(40) ~ 0.77. If we multiply that by 111,320 we get 85,000m in Urbana.
+- converts latitude values to radians so it can be used to be calculated using the cos function
+- hands back the latitude and longitude of one waypoint. Used by save_gpx.
 
 ```python
 def path_length(points):
@@ -136,4 +149,10 @@ if __name__ == "__main__":
     print(f"Saved route to {OUTPUT_FILE}")
 ```
 
-Explain here.
+- if __name__ == "__main__": means running the part only when the file is started directly, acts as the program start button, calls the functions defined above.
+- minutes : distance/speed gives seconds of flight time. Dividing by 60 turns seconds into minutes.
+area_hectares divide by 10,000 since one hectare is 10,000m^2, dividing by 10000 converts units back to hectares.
+- saves the gpx values so it can be reopened in different maps if necessary
+- prints the number of waypoints while len() is used to count them
+- prints planned distance, since the drone hasn't flown yet.
+- prints flight time
