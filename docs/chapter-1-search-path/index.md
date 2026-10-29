@@ -93,7 +93,7 @@ def path_length(points):
 - zip(points, points[1:]) : pairs each waypoint with the next one, so each pair is one leg of the flight.
 - The hypotenuse function turns two changes (east and north values) into one straight line distance.
 - The += function acts as an odometer, additional gain. This allows the main block to divide total distance by drone speed.
-- Example: (0,0) -> (0,100)  = 100m, (0,100) -> (30,100) = 30m, so the total distance goes from 0 -> 100 -> 130.
+- Example: (0,0) --> (0,100)  = 100m, (0,100) --> (30,100) = 30m, so the total distance goes from 0 --> 100 --> 130.
 
 ```python
 def save_gpx(points, filename):
