@@ -3,11 +3,11 @@
 ## The problem
 After interviewing SAR team leads at Illinois there has been several key issues identified:
 - Lack of volunteers
-- Time issue narrowing done search areas
+- Time issue narrowing down search areas
 
 The current breakdown of chain of command: 
 Command centers give designated search areas to local SAR teams -> SAR teams search areas -> come back to command center to find a new search area.
-Inevitably SAR teams (K9 dogs & SAR volunteers) are irreplaceable. However, by using autonomous drones trained by AI models, we can create autonomously narrow down search areas by pre-scanning search areas lost people may be detected at.
+Inevitably SAR teams (K9 dogs & SAR volunteers) are irreplaceable. Drones could pre-scan an area and flag likely spots, helping teams decided where to search first.
 
 This section is dedicated in creating flight patterns for the drone to scan an area beforehand.
 
@@ -37,7 +37,7 @@ The very last code lets us set the name of the output file.
 METERS_PER_DEG_LAT = 111_320
 ```
 
-- A constant: we need to convert the GPS degree units to math in meters. 111,320 m per degree of latitude. Therefore, we use this conversion. _ is simply used for readability.
+- A constant: convert between GPS degrees and meters. 111,320 m per degree of latitude. Therefore, we use this conversion. _ is simply used for readability.
 
 ## Step 2: Building the lanes
 
@@ -60,13 +60,26 @@ def make_lawnmower(width, height, spacing):
 - The image one of the SAR team leads showed me for the search areas appeared to be a rectangle. Therefore, we also used rectangles to replicate search areas.
 - Lanes account for the number of lanes  = field width / lane spacing, rounded up +1. 
 - Spacing realistically would be represented how wide a strip of ground the camera sees minus the overlap. +1 accounts for the beginning of the count. Just like how a 30m fence with post every 10m has 4 posts and 3 gaps. The posts would represent the lanes.
-`points = []`: the coordinates go in it. It is empty because the function hasn't calculated any waypoints yet, and the loop fills it.
-- `for i in range(lanes)`: :Repeats n + 1 times.
+- `points = []`: the coordinates go in it. It is empty because the function hasn't calculated any waypoints yet, and the loop fills it.
+- `for i in range(lanes)`: :Repeats n + 1 times. One per lane; `i` coust 0, 1, 2...
 - `east = min(i * spacing, width)`: i * spacing represents how far the lane is from the starting edge. By the time it reaches outside the search area, the min(..., width) picks the smaller number so the last lane gets pulled back to the fields edge.
 - `if i % 2 == 0`: :Change drones direction depending on whether it is on a even/odd lane so that the drone doesn't reposition itself facing the same direction every time it clears a lane, it'll be a waste of time having the drone set up its position after every lane.
 - Without a flip, the drone will fly all the way across the field to start again = waste of battery and time.
-return points : hands back full list of planned way points.
+- return points : hands back full list of planned way points.
 
+```python
+def to_lat_lon(east_m, north_m, start_lat, start_lon):
+    lat = start_lat + north_m / METERS_PER_DEG_LAT
+    meters_per_deg_lon = METERS_PER_DEG_LAT * math.cos(math.radians(start_lat))
+    lon = start_lon + east_m / meters_per_deg_lon
+    return lat, lon
+```
+
+- we need this function because our waypoints are in meters, but GPS or a map needs the waypoints converted to lat, lon values
+- `lat = ...` 111,320 / 111,320 to get 1 degree north. Then the code adds that to start_lat to get the new latitude.
+- Near the poles, 1 degree of longitude covers fewer meters, so the `meters_per_deg_lon` gets smaller. So even if the same distance of 100m may be covered, it would result in more degrees of longitude. Urbana is around 40 degrees north, so cos(40) ~ 0.77. If we multiply that by 111,320 we get 85,000m in Urbana.
+- converts latitude values to radians so it can be used to be calculated using the cos function
+- hands back the latitude and longitude of one waypoint. Used by save_gpx.
 
 ```python
 def path_length(points):
@@ -75,20 +88,6 @@ def path_length(points):
         total += math.hypot(x2 - x1, y2 - y1)
     return total
 ```
-- Function uses meter waypoints from make_lawnmower i.e. (0,0) & (0,100).
-- Starts at total = 0 because no distance has been counted yet.
-- x2 - x1, y2- y1: is Pythagoras, representing the distance it moved from point 1 to point 2. East and north points. Sqrt(east^2 + north^2)
-- total +=: adding what is already there - like an odometer.
-- Final number represents the drone's planned distance since it hasn't flown yet. The main block divided by speed to get estimated flight time.
-
-```python
-def path_length(points):
-    total = 0
-    for (x1, y1), (x2, y2) in zip(points, points[1:]):
-        total += math.hypot(x2 - x1, y2 - y1)
-    return total
-```
-
 - This determines the length of the path. We start with 0 as our total.
 - `zip(points, points[1:])` : pairs each waypoint with the next one, so each pair is one leg of the flight.
 - The `math.hypot` function turns two changes (east and north values) into one straight line distance.
@@ -110,23 +109,23 @@ def save_gpx(points, filename):
         f.write("\n".join(lines))
 ```
 
-- `<rte>` indicates where route section starts in the file and </rte> marks where it ends. <name> gives it name.
+- `<rte>` indicates where route section starts in the file and `</rte>` marks where it ends. `<name>` gives it name.
 - `<?xml...>` and `<gpx...>` acts as headers that tells apps that it is a start of GPX file.
 - for east, north in points: takes one meter waypoint at a time
 - `to_lat_lon(...)` convert it to GPS latitude and longitude
-- `lines.append(...)1 adds one <rtept> route point line with those numbers
+- `lines.append(...)` adds one <rtept> route point line with those numbers
 - `lines += [...]` adds the closing tags `</rte>` and `</gpx>` to end the route and the file.
 - `open(filename, "w")` creates the file. `"w"` means write, and it replaces any old file with the same name.
 - `"\n".join(lines)` puts each line on its own row.
 - We save gpx points so it can be reopened using Google Earth and show the route on a real map or load it.
-- 1 decimal place is 11km so rounding to 6 decimal places helps us narrow down the precision down to 10cm
+- 1 decimal place is 11km so rounding to 6 decimal places helps us narrow down the precision to 10cm
 
 ```python
 if __name__ == "__main__":
     route = make_lawnmower(WIDTH_M, HEIGHT_M, LANE_SPACING_M)
     distance = path_length(route)
     minutes = distance / SPEED_MPS / 60
-    area_hectares = math.pi * RADIUS_M**2 / 10_000
+    area_hectares = WITDH_M * HEIGHT_M / 10_000
 
     save_gpx(route, OUTPUT_FILE)
     print(f"Area: {area_hectares:.1f} hectares")
@@ -136,4 +135,10 @@ if __name__ == "__main__":
     print(f"Saved route to {OUTPUT_FILE}")
 ```
 
-Explain here.
+- `if __name__ == "__main__":` means running the part only when the file is started directly, acts as the program start button, calls the functions defined above.
+- minutes : distance/speed gives seconds of flight time. Dividing by 60 turns seconds into minutes.
+- area_hectares divide by 10,000 since one hectare is 10,000m^2, dividing by 10000 converts units back to hectares.
+- saves the gpx values so it can be reopened in different maps if necessary
+- prints the number of waypoints while len() is used to count them
+- prints planned distance, since the drone hasn't flown yet.
+- prints flight time

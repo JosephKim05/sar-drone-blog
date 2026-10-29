@@ -89,10 +89,6 @@ What it does:
 - Night, thermal, smoke, or forest cover — untested.
 - Whether my threshold is a good trade-off between misses and false alarms. In SAR, a miss is usually worse than a false alarm, but too many false alarms waste reviewer time.
 
-## How AI helped
-
-[Be specific: e.g., "An AI assistant drafted the SAHI loop and the plotting code. I changed X, tested Y, and can explain the parts above. I don't yet fully understand Z."]
-
 ## Credits
 
 - VisDrone dataset — Zhu et al., *Detection and Tracking Meet Drones Challenge*, IEEE TPAMI 2021.
