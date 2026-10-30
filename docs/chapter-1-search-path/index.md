@@ -155,5 +155,9 @@ if __name__ == "__main__":
 - Wrote every explanation of code in this file for learning experience and to teach others who may also be inexperienced in coding
 - Found and fixed bugs: converting `RADIUS_M` back to `WIDTH_M`, `HEIGHT_M`
 
+**How I checked it:**
+- Ran it with a 200 × 100 m area and 30 m spacing: 16 waypoints, 1,000 m path.
+- Worked the distance math by hand (0 → 100 → 130 m).
+
 **What I don't understand yet**
 - Exact GPX format rules
