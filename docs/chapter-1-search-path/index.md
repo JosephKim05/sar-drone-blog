@@ -142,3 +142,17 @@ if __name__ == "__main__":
 - prints the number of waypoints while len() is used to count them
 - prints planned distance, since the drone hasn't flown yet.
 - prints flight time
+
+## How AI helped
+
+**What AI did:**
+- Helped write introduce me tools and how to use various tools such as utilizing: github, caltopo, and search routes
+- Helped experiment with different variations of search areas: creating mathematical formulas for a circle search area
+
+**What I did:**
+- Chose a rectangle search area, based on interviews with local SAR team leads
+- Wrote every explanation of code in this file for learning experience and to teach others who may also be inexperienced in coding
+- Found and fixed bugs: converting `RADIUS_M` back to `WIDTH_M`, `HEIGHT_M`
+
+**What I don't understand yet**
+- Exact GPX format rules
