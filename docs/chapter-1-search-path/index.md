@@ -146,6 +146,7 @@ if __name__ == "__main__":
 ## How AI helped
 
 **What AI did:**
+- Helped write original code
 - Helped write introduce me tools and how to use various tools such as utilizing: github, caltopo, and search routes
 - Helped experiment with different variations of search areas: creating mathematical formulas for a circle search area
 
