@@ -32,7 +32,7 @@ results[0].save("outputs/out.jpg")
 - It saves one image, with the boxes and confidence scores drawn on it.
 
 ## Step 2: Slicing with SAHI (`detect_sahi.py`)
-```
+```python
 from sahi import AutoDetectionModel
 from sahi.predict import get_sliced_prediction
 
@@ -62,6 +62,7 @@ print(scores[:10])
 print("People found:", len(result.object_prediction_list))
 result.export_visuals(export_dir="outputs/", file_name="sahi_s_test4_192_020")
 ```
+
 
 ## Step 3: Scale-aware detection (`detect_map.py`)
 
