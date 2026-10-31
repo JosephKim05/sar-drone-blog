@@ -2,7 +2,7 @@
 
 ## The problem
 
-Write here.
+Drones can photograph a search area in minutes, but finding a tiny person in hundreds of photos is slow, so this tool flags the photos most likely to show someone, so the SAR team knows where to look first.
 
 ## Pipeline
 
@@ -15,10 +15,21 @@ Write here.
 ## Step 1: Plain YOLO (`detect.py`)
 
 ```python
-paste code here
-```
+from ultralytics import YOLO
 
-Explain here.
+model = YOLO("yolov8n.pt")
+results = model("images/test2.jpg", classes=[0], conf=0.15, imgsz=1280, iou=0.5)
+print("People found:", len(results[0].boxes))
+results[0].save("outputs/out.jpg")
+```
+- `print("People found:", len(results[0].boxes))`  Counts the number of boxes detected. The boxes each have a confidence score from 0 to 1 and each box marks a suspected person. YOLO returns a list of results, so `[0]` picks the first and only result. Since python counts from 0, the first item is 0. Some boxes may be on bushes or shadows, and some people may be missed.
+- `results = model("images/test2.jpg", classes=[0], conf=0.15, imgsz=1280, iou=0.5)` if the model knows 80 kind of objects, class 0 represents person in COCO (dataset this model learned from) it is trying to find. Trade off: 0.15 is low, bringing more false alarms. SAR uses this as a missing person is worse than a false alarm. Boxes below 0.15 are dropped and don't get to have a box created around it. The model shrinks every photo to this size before looking at it. Bigger size images keeps more pixels, allowing a tiny hiker stay big enough for recognition. The program runs slower, however. If two boxes over lap more than 50%, the model keeps the one with the higher confidence and removes the other.
+`from ultralytics import YOLO`
+- It loads the YOLO tool from Ultralytics library.
+`model = YOLO("yolov8n.pt")`
+- n in yolov8n represents nano. The speed is fastest, but has the lowest accuracy. I started with the smallest model because I was running the tests on a laptop, not a GPU. There are bigger sizes for yolov8 that runs more accurate, but slower.
+`results[0].save("outputs/out.jpg")`
+- It saves one image, with the boxes and confidence scores drawn on it.
 
 ## Step 2: Slicing with SAHI (`detect_sahi.py`)
 
