@@ -14,7 +14,7 @@ This section is dedicated in creating flight patterns for the drone to scan an a
 ## How the code fits together
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[You type 6 inputs] --> B[make_lawnmower]
     B --> C[Waypoints in meters]
     C --> D[path_length]
