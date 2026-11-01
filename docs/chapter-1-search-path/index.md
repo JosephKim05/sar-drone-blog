@@ -11,6 +11,20 @@ Inevitably SAR teams (K9 dogs & SAR volunteers) are irreplaceable. Drones could 
 
 This section is dedicated in creating flight patterns for the drone to scan an area beforehand.
 
+## How the code fits together
+
+```mermaid
+flowchart TD
+    A[You type 6 inputs] --> B[make_lawnmower]
+    B --> C[Waypoints in meters]
+    C --> D[path_length]
+    D --> E[Distance and flight time]
+    C --> F[save_gpx]
+    F --> G[to_lat_lon]
+    G --> H[search_route.gpx]
+    H --> I[Route on a map]
+```
+
 ## Step 1: Inputs
 
 ```python
