@@ -1,4 +1,6 @@
 # Chapter 1: Planning the drone's search path
+!!! note "Update (Nov 2026)"
+    I later made `search_v2.py` reusable so other scripts can import its functions. The `input()` lines moved under `if __name__ == "__main__":`, and `save_gpx` now takes `start_lat` and `start_lon` as parameters. The logic and the output are unchanged. Explained in Chapter 3.
 
 ## The problem
 After interviewing SAR team leads at Illinois several key issues were identified:
